@@ -1,6 +1,9 @@
 import mongoose, { Schema, Document } from "mongoose";
+import bcrypt from "bcrypt";
 
-export interface userDocument extends Document {
+const saltRounds = 10;
+
+export interface UserDocument extends Document {
 	name: string;
 	email: string;
 	password: string;
@@ -16,6 +19,23 @@ const UserSchema: Schema = new Schema({
 	updatedAt: { type: Date, default: Date.now },
 });
 
-const User = mongoose.model<userDocument>("User", UserSchema);
+UserSchema.pre<UserDocument>("save", async function (next) {
+	const user = this;
+
+	if (!user.isModified("password")) {
+		return next();
+	}
+
+	try {
+		const salt = await bcrypt.genSalt(saltRounds);
+		const hashedPassword = await bcrypt.hash(user.password, salt);
+		user.password = hashedPassword;
+		next();
+	} catch (error) {
+		next(error);
+	}
+});
+
+const User = mongoose.model<UserDocument>("User", UserSchema);
 
 export default User;
