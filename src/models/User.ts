@@ -32,7 +32,9 @@ UserSchema.pre<UserDocument>("save", async function (next) {
 		user.password = hashedPassword;
 		next();
 	} catch (error) {
-		next(error);
+		if (error instanceof Error) {
+			next(error);
+		}
 	}
 });
 

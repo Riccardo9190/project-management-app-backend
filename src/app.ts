@@ -3,12 +3,12 @@ dotenv.config();
 
 import express from "express";
 import connectToDatabase from "../config/database";
-import { authRouter } from "./routes";
+import { mainRouter } from "./routes";
 
 const app = express();
 
 app.use(express.json());
-app.use("/auth", authRouter);
+app.use("/", mainRouter);
 
 const PORT = process.env.PORT || 3000;
 
