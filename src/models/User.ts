@@ -1,9 +1,10 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 import bcrypt from "bcrypt";
 
 const saltRounds = 10;
 
 export interface UserDocument extends Document {
+	_id: Types.ObjectId;
 	name: string;
 	email: string;
 	password: string;
